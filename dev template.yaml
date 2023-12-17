@@ -1,0 +1,25 @@
+selector:
+    matchLabels:
+      {{- include "chart.labels" . | indent 6 }}
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+
+
+
+{{- include "ports.pod" . | indent 8 }}
+          env:
+            - name: ROOT_URL
+              value: http://wallet.pylons.tech
+            - name: MONGO_URL
+              value: {{ .Values.mongoURL }}
+            - name: PORT
+              value: "80"
+            - name: METEOR_SETTINGS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}
+                  key: settings.json
+          resources:}
